@@ -1,0 +1,181 @@
+#include <graphics.h>
+#include <iostream>
+
+void drawDashedLine(int x1, int y1, int x2, int y2) {
+    int dx = abs(x2 - x1);
+    int dy = abs(y2 - y1);
+    int steps = dx > dy ? dx : dy;
+
+    float xIncrement = dx / (float)steps;
+    float yIncrement = dy / (float)steps;
+
+    float x = x1;
+    float y = y1;
+    int count = 0;
+
+    for (int i = 0; i <= steps; i++) {
+        if (count < 5) {
+            putpixel(x, y, WHITE);
+            count++;
+        } else {
+            count = 0;
+        }
+
+        x += xIncrement;
+        y += yIncrement;
+    }
+}
+
+void drawSolidLine(int x1, int y1, int x2, int y2) {
+    int dx = abs(x2 - x1);
+    int dy = abs(y2 - y1);
+    int steps = dx > dy ? dx : dy;
+
+    float xIncrement = dx / (float)steps;
+    float yIncrement = dy / (float)steps;
+
+    float x = x1;
+    float y = y1;
+
+    for (int i = 0; i <= steps; i++) {
+        putpixel(x, y, WHITE);
+
+        x += xIncrement;
+        y += yIncrement;
+    }
+}
+
+int main() {
+    int gd = DETECT, gm;
+    initgraph(&gd, &gm, "");
+
+    int x1, y1, x2, y2;
+
+    std::cout << "Enter the starting point (x1, y1): ";
+    std::cin >> x1 >> y1;
+
+    std::cout << "Enter the ending point (x2, y2): ";
+    std::cin >> x2 >> y2;
+
+    drawDashedLine(x1, y1, x2, y2);
+    // drawSolidLine(x1, y1, x2, y2);  // Uncomment this line to draw a solid line
+
+    delay(5000);
+    closegraph();
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#include <graphics.h>
+#include <iostream>
+
+void boundaryFill(int x, int y, int fillColor, int borderColor) {
+    if (getpixel(x, y) != borderColor && getpixel(x, y) != fillColor) {
+        putpixel(x, y, fillColor);
+
+        boundaryFill(x + 1, y, fillColor, borderColor);
+        boundaryFill(x - 1, y, fillColor, borderColor);
+        boundaryFill(x, y + 1, fillColor, borderColor);
+        boundaryFill(x, y - 1, fillColor, borderColor);
+    }
+}
+
+int main() {
+    int gd = DETECT, gm;
+    initgraph(&gd, &gm, "");
+
+    int choice;
+    int x, y;
+    int fillColor, borderColor;
+
+    std::cout << "Choose an option:\n";
+    std::cout << "1. Mouse Click\n";
+    std::cout << "2. Keyboard Interface\n";
+    std::cout << "Enter your choice: ";
+    std::cin >> choice;
+
+    switch (choice) {
+        case 1: {
+            std::cout << "Enter the fill color (integer value): ";
+            std::cin >> fillColor;
+            std::cout << "Enter the border color (integer value): ";
+            std::cin >> borderColor;
+
+            std::cout << "Click inside the polygon to fill\n";
+            std::cout << "Press any key to exit\n";
+
+            while (!kbhit()) {
+                if (ismouseclick(WM_LBUTTONDOWN)) {
+                    getmouseclick(WM_LBUTTONDOWN, x, y);
+                    boundaryFill(x, y, fillColor, borderColor);
+                }
+            }
+            break;
+        }
+        case 2: {
+            std::cout << "Enter the fill color (integer value): ";
+            std::cin >> fillColor;
+            std::cout << "Enter the border color (integer value): ";
+            std::cin >> borderColor;
+
+            std::cout << "Use arrow keys to move the cursor\n";
+            std::cout << "Press 'F' to fill the polygon\n";
+            std::cout << "Press 'Q' to exit\n";
+
+            while (true) {
+                if (kbhit()) {
+                    char key = getch();
+                    if (key == 'q' || key == 'Q') {
+                        break;
+                    } else if (key == 'f' || key == 'F') {
+                        boundaryFill(x, y, fillColor, borderColor);
+                    } else if (key == 0 || key == 224) {
+                        key = getch();
+                        if (key == 72) {  // Up arrow
+                            y--;
+                        } else if (key == 80) {  // Down arrow
+                            y++;
+                        } else if (key == 75) {  // Left arrow
+                            x--;
+                        } else if (key == 77) {  // Right arrow
+                            x++;
+                        }
+                    }
+                }
+            }
+            break;
+        }
+        default:
+            std::cout << "Invalid choice!\n";
+            break;
+    }
+
+    delay(5000);
+    closegraph();
+
+    return 0;
+}
+
+
+

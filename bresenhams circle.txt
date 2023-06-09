@@ -1,0 +1,46 @@
+#include <graphics.h>
+
+void drawCircle(int centerX, int centerY, int radius) {
+    int x = 0;
+    int y = radius;
+    int d = 3 - 2 * radius;
+
+    while (x <= y) {
+        // Plot the points in all four quadrants
+        putpixel(centerX + x, centerY + y, WHITE);
+        putpixel(centerX - x, centerY + y, WHITE);
+        putpixel(centerX + x, centerY - y, WHITE);
+        putpixel(centerX - x, centerY - y, WHITE);
+        putpixel(centerX + y, centerY + x, WHITE);
+        putpixel(centerX - y, centerY + x, WHITE);
+        putpixel(centerX + y, centerY - x, WHITE);
+        putpixel(centerX - y, centerY - x, WHITE);
+
+        if (d < 0) {
+            d = d + 4 * x + 6;
+        } else {
+            d = d + 4 * (x - y) + 10;
+            y--;
+        }
+        x++;
+    }
+}
+
+int main() {
+    int gd = DETECT, gm;
+    initgraph(&gd, &gm, "");
+
+    int centerX, centerY, radius;
+
+    std::cout << "Enter the center coordinates (x, y): ";
+    std::cin >> centerX >> centerY;
+    std::cout << "Enter the radius: ";
+    std::cin >> radius;
+
+    drawCircle(centerX, centerY, radius);
+
+    delay(5000);
+    closegraph();
+
+    return 0;
+}

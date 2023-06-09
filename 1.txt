@@ -1,0 +1,110 @@
+#include <graphics.h>
+#include <iostream>
+
+void drawSimpleLine(int x1, int y1, int x2, int y2) {
+    int dx = x2 - x1;
+    int dy = y2 - y1;
+
+    int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
+
+    float xIncrement = dx / (float)steps;
+    float yIncrement = dy / (float)steps;
+
+    float x = x1;
+    float y = y1;
+
+    for (int i = 0; i <= steps; i++) {
+        putpixel(x, y, WHITE);
+        x += xIncrement;
+        y += yIncrement;
+    }
+}
+
+void drawDottedLine(int x1, int y1, int x2, int y2) {
+    int dx = x2 - x1;
+    int dy = y2 - y1;
+
+    int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
+
+    float xIncrement = dx / (float)steps;
+    float yIncrement = dy / (float)steps;
+
+    float x = x1;
+    float y = y1;
+
+    for (int i = 0; i <= steps; i++) {
+        if (i % 5 == 0) {
+            putpixel(x, y, WHITE);
+        }
+        x += xIncrement;
+        y += yIncrement;
+    }
+}
+
+int main() {
+    int gd = DETECT, gm;
+    initgraph(&gd, &gm, "");
+
+    int x1, y1, x2, y2;
+
+    std::cout << "Enter the starting point (x1, y1): ";
+    std::cin >> x1 >> y1;
+
+    std::cout << "Enter the ending point (x2, y2): ";
+    std::cin >> x2 >> y2;
+
+    drawSimpleLine(x1, y1, x2, y2);
+    // drawDottedLine(x1, y1, x2, y2);  // Uncomment this line to draw a dotted line
+
+    delay(5000);
+    closegraph();
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+#include <graphics.h>
+
+void floodFill(int x, int y, int fillColor, int borderColor) {
+    int currentColor = getpixel(x, y);
+
+    if (currentColor != borderColor && currentColor != fillColor) {
+        putpixel(x, y, fillColor);
+
+        floodFill(x + 1, y, fillColor, borderColor);
+        floodFill(x - 1, y, fillColor, borderColor);
+        floodFill(x, y + 1, fillColor, borderColor);
+        floodFill(x, y - 1, fillColor, borderColor);
+    }
+}
+
+int main() {
+    int gd = DETECT, gm;
+    initgraph(&gd, &gm, "");
+
+    // Draw a polygon
+    int points[] = {100, 100, 200, 100, 200, 200, 100, 200, 100, 100};
+    drawpoly(5, points);
+
+    // Choose a seed point inside the polygon
+    int seedX = 150;
+    int seedY = 150;
+
+    // Fill the polygon with a color (YELLOW in this case)
+    floodFill(seedX, seedY, YELLOW, BLACK);
+
+    delay(5000);
+    closegraph();
+
+    return 0;
+}
+
+
+

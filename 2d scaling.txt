@@ -1,0 +1,47 @@
+#include <graphics.h>
+
+void scaleObject(int x[], int y[], int n, float scaleX, float scaleY) {
+    for (int i = 0; i < n; i++) {
+        x[i] = x[i] * scaleX;
+        y[i] = y[i] * scaleY;
+    }
+}
+
+int main() {
+    int gd = DETECT, gm;
+    initgraph(&gd, &gm, "");
+
+    int n;  // Number of vertices
+    float scaleX, scaleY;
+
+    std::cout << "Enter the number of vertices: ";
+    std::cin >> n;
+
+    int x[n], y[n];  // Array to store x and y coordinates of vertices
+
+    std::cout << "Enter the coordinates of the vertices:\n";
+    for (int i = 0; i < n; i++) {
+        std::cout << "Vertex " << (i + 1) << " (x, y): ";
+        std::cin >> x[i] >> y[i];
+    }
+
+    std::cout << "Enter the scaling factor along the x-axis: ";
+    std::cin >> scaleX;
+    std::cout << "Enter the scaling factor along the y-axis: ";
+    std::cin >> scaleY;
+
+    scaleObject(x, y, n, scaleX, scaleY);
+
+    // Draw the original object
+    setcolor(WHITE);
+    drawpoly(n, x, y);
+
+    // Draw the scaled object
+    setcolor(YELLOW);
+    drawpoly(n, x, y);
+
+    delay(5000);
+    closegraph();
+
+    return 0;
+}

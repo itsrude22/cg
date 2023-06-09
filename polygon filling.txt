@@ -1,0 +1,61 @@
+#include <graphics.h>
+#include <iostream>
+
+void boundaryFill(int x, int y, int fillColor, int boundaryColor) {
+    int currentColor = getpixel(x, y);
+
+    if (currentColor != boundaryColor && currentColor != fillColor) {
+        putpixel(x, y, fillColor);
+
+        // Recursive calls for 4-connected pixels
+        boundaryFill(x + 1, y, fillColor, boundaryColor);
+        boundaryFill(x - 1, y, fillColor, boundaryColor);
+        boundaryFill(x, y + 1, fillColor, boundaryColor);
+        boundaryFill(x, y - 1, fillColor, boundaryColor);
+    }
+}
+
+int main() {
+    int gd = DETECT, gm;
+    initgraph(&gd, &gm, "");
+
+    int n;  // Number of vertices
+    int x, y;  // Mouse click coordinates
+    int fillColor, boundaryColor;
+
+    std::cout << "Enter the number of vertices: ";
+    std::cin >> n;
+
+    int points[2 * n];  // Array to store x and y coordinates of vertices
+
+    std::cout << "Enter the coordinates of the vertices:\n";
+    for (int i = 0; i < 2 * n; i += 2) {
+        std::cout << "Vertex " << (i / 2 + 1) << " (x, y): ";
+        std::cin >> points[i] >> points[i + 1];
+    }
+
+    std::cout << "Enter the fill color: ";
+    std::cin >> fillColor;
+    std::cout << "Enter the boundary color: ";
+    std::cin >> boundaryColor;
+
+    // Draw the polygon
+    setcolor(WHITE);
+    drawpoly(n, points);
+
+    // Prompt for mouse click
+    std::cout << "Click inside the polygon to fill it.\n";
+
+    while (!ismouseclick(WM_LBUTTONDOWN))
+        delay(200);
+
+    getmouseclick(WM_LBUTTONDOWN, x, y);
+
+    // Perform boundary fill at the clicked position
+    boundaryFill(x, y, fillColor, boundaryColor);
+
+    delay(5000);
+    closegraph();
+
+    return 0;
+}

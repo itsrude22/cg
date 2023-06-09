@@ -1,0 +1,55 @@
+#include <graphics.h>
+#include <iostream>
+
+void floodFill(int x, int y, int fillColor, int oldColor) {
+    if (getpixel(x, y) == oldColor) {
+        putpixel(x, y, fillColor);
+
+        // Recursive calls for 4-connected pixels
+        floodFill(x + 1, y, fillColor, oldColor);
+        floodFill(x - 1, y, fillColor, oldColor);
+        floodFill(x, y + 1, fillColor, oldColor);
+        floodFill(x, y - 1, fillColor, oldColor);
+    }
+}
+
+int main() {
+    int gd = DETECT, gm;
+    initgraph(&gd, &gm, "");
+
+    int n;  // Number of vertices
+    int x, y;  // Seed point coordinates
+    int fillColor, boundaryColor;
+
+    std::cout << "Enter the number of vertices: ";
+    std::cin >> n;
+
+    int points[2 * n];  // Array to store x and y coordinates of vertices
+
+    std::cout << "Enter the coordinates of the vertices:\n";
+    for (int i = 0; i < 2 * n; i += 2) {
+        std::cout << "Vertex " << (i / 2 + 1) << " (x, y): ";
+        std::cin >> points[i] >> points[i + 1];
+    }
+
+    std::cout << "Enter the fill color: ";
+    std::cin >> fillColor;
+    std::cout << "Enter the boundary color: ";
+    std::cin >> boundaryColor;
+
+    // Draw the polygon
+    setcolor(WHITE);
+    drawpoly(n, points);
+
+    // Prompt for seed point
+    std::cout << "Enter the seed point coordinates (x, y): ";
+    std::cin >> x >> y;
+
+    // Perform flood fill from the seed point
+    floodFill(x, y, fillColor, boundaryColor);
+
+    delay(5000);
+    closegraph();
+
+    return 0;
+}
